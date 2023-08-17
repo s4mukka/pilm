@@ -1,0 +1,10 @@
+version: 'v3'
+services:
+  mqtt-broker:
+    container_name: mqtt-broker
+    image: emqx/emqx:5.1.5
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8084:8084
+      - 18083:18083
