@@ -2,9 +2,35 @@ version: 'v3'
 services:
   mqtt-broker:
     container_name: mqtt-broker
-    image: emqx/emqx:5.1.5
+    image: docker.io/emqx/emqx:5.1.5
     ports:
       - 1883:1883
       - 8083:8083
       - 8084:8084
       - 18083:18083
+    networks:
+      - pilm-network
+    healthcheck:
+      test: ["CMD", "/opt/emqx/bin/emqx_ctl", "status"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 5s
+  pilm-factory:
+    depends_on:
+      - mqtt-broker
+    container_name: pilm-factory
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    command: python /home/pilm/start-factory.py
+    restart: unless-stopped
+    volumes:
+      - ./docker/configs/factory.conf:/etc/pilm/pilm.conf
+    environment:
+      - PILM_CONF=/etc/pilm/pilm.conf
+    networks:
+      - pilm-network
+networks:
+  pilm-network:
+    driver: bridge
