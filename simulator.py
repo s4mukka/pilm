@@ -7,7 +7,7 @@ import json
 class Simulator(Publisher):
     def send_order(self):
         data = {
-            "product_id": randint(0, 4),
+            "product_version": "Pv{}".format(randint(1, 5)),
             "parts": choices(range(100), k=randint(47, 99))
         }
         self.send_message('order/purchase', json.dumps(data))

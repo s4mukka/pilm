@@ -1,0 +1,168 @@
+* {
+  outline: 0;
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+body {
+  background-color: #f1f1f1;
+  width: 100vw;
+  height: 100vh;
+
+  font-family: 'Roboto', sans-serif;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.header {
+  width: 100%;
+  height: 54px;
+
+  background-color: #5169F5;
+
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  width: 1080px;
+  height: auto;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 500;
+  color: #f1f1f1;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 64px;
+}
+
+main > div {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deposit {
+  background-color: #42B5DF;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  color: #f1f1f1;
+
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.deposit > header {
+  font-size: 24px;
+}
+
+.deposit span {
+  font-size: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.factory {
+  background-color: #f1f1f1;
+
+  border-radius: 10px;
+
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.factory > header {
+  background-color: #42B5DF;
+  border-radius: 10px 10px 0px 0px;
+  font-size: 24px;
+  color: #f1f1f1;
+  padding: 12px;
+}
+
+.factory > .kanban {
+  display: flex;
+  justify-content: space-between;
+}
+
+.factory > .kanban > .kanban-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.factory > .kanban > .kanban-list > strong {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+
+  border-radius: 0 0 5px 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.factory > .kanban > .kanban-list > ul {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 500;
+}
+
+.factory > .kanban > .red {
+  background-color: #ff3355;
+  color: #6e0012;
+}
+
+.factory > .kanban > .red > strong {
+  background: #6e0012;
+  color: #ff3355;
+  
+}
+
+.factory > .kanban > .green {
+  background-color: #33ff77;
+  color: #006e25;
+}
+
+.factory > .kanban > .green > strong {
+  background: #006e25;
+  color: #33ff77;
+}
+
+.factory > .kanban > .yellow {
+  background-color: #f7e074;
+  color: #665506;
+}
+
+.factory > .kanban > .yellow > strong {
+  background: #665506;
+  color: #f7e074;
+}

@@ -11,10 +11,12 @@ class Client(Config):
         self.name = name.upper()
         server = self.config.get('mqtt', 'server')
         port = int(self.config.get('mqtt', 'port'))
+        ws_port = int(self.config.get('mqtt', 'ws_port'))
         self.client = self.get_client(server, port)
+        self.ws_client = self.get_client(server, ws_port, 'websockets')
 
-    def get_client(self, server, port):
-        client = mqtt.Client()
+    def get_client(self, server, port, transport='tcp'):
+        client = mqtt.Client(transport=transport)
 
         msg = (
           '{name} Trying to connect to server {server}:{port}'

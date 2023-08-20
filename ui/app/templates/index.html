@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Pilm UI</title>
+  <script src="https://unpkg.com/mqtt@5.0.3/dist/mqtt.min.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="box">
+      <span class="logo">Pilm UI</span>
+    </div>
+  </header>
+  <main>
+    <div class="box">
+      <div class="deposit">
+        <header>
+          <strong>Depósito de Produtos</strong>
+        </header>
+        <span id="produced-products">0</span>
+      </div>
+      <div class="factory">
+        <header>
+          <strong>Estoque da Fábrica</strong>
+        </header>
+        <div class="kanban">
+          <div class="kanban-list red">
+            <strong>RED</strong>
+            <ul id="red-factory">
+            </ul>
+          </div>
+          <div class="kanban-list yellow">
+            <strong>YELLOW</strong>
+            <ul id="yellow-factory">
+            </ul>
+          </div>
+          <div class="kanban-list green">
+            <strong>GREEN</strong>
+            <ul id="green-factory">
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

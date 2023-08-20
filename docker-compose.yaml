@@ -31,6 +31,21 @@ services:
       - PILM_CONF=/etc/pilm/pilm.conf
     networks:
       - pilm-network
+  pilm-deposit:
+    depends_on:
+      - mqtt-broker
+    container_name: pilm-deposit
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    command: python /home/pilm/start-deposit.py
+    restart: unless-stopped
+    volumes:
+      - ./docker/configs/deposit.conf:/etc/pilm/pilm.conf
+    environment:
+      - PILM_CONF=/etc/pilm/pilm.conf
+    networks:
+      - pilm-network
 networks:
   pilm-network:
     driver: bridge
