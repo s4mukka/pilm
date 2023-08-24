@@ -1,6 +1,9 @@
-const clientId = 'mqttjs_' + Math.random().toString(16).substr(2, 8)
+const clientId = 'mqttjs_' + Math.random().toString(16).slice(2, 8)
 
-const host = 'ws://localhost:8083/mqtt'
+const mqttHost = document.getElementById("MQTT_HOST").value || 'localhost'
+const mqttWSPort = document.getElementById("MQTT_WS_PORT").value || '8083'
+
+const host = 'ws://' + mqttHost + ':' + mqttWSPort +'/mqtt'
 
 const options = {
   keepalive: 60,
@@ -18,7 +21,7 @@ const options = {
   },
 }
 
-console.log('Connecting mqtt client')
+console.log('Connecting mqtt client ' + host)
 const client = mqtt.connect(host, options)
 client.on('connect', () => {
   console.log(`Client connected: ${clientId}`)

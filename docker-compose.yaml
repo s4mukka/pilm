@@ -22,7 +22,7 @@ services:
     container_name: pilm-factory
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/Dockerfile.pilm
     command: python /home/pilm/start-factory.py
     restart: unless-stopped
     volumes:
@@ -37,13 +37,29 @@ services:
     container_name: pilm-deposit
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/Dockerfile.pilm
     command: python /home/pilm/start-deposit.py
     restart: unless-stopped
     volumes:
       - ./docker/configs/deposit.conf:/etc/pilm/pilm.conf
     environment:
       - PILM_CONF=/etc/pilm/pilm.conf
+    networks:
+      - pilm-network
+  pilm-ui:
+    depends_on:
+      - pilm-factory
+      - pilm-deposit
+    container_name: pilm-ui
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.pilm-ui
+    ports:
+      - 8000:8000
+    restart: unless-stopped
+    environment:
+      - MQTT_HOST=localhost
+      - MQTT_WS_PORT=8083
     networks:
       - pilm-network
 networks:

@@ -1,0 +1,20 @@
+FROM docker.io/library/python:3.9
+
+RUN useradd -m pilm
+
+WORKDIR /home/pilm
+
+ADD ../requirements.pilm-ui.txt requirements.txt
+
+# RUN apt install net-tools
+
+RUN pip install -r requirements.txt
+
+COPY ../ui/ pilm-ui/
+
+RUN chown -R pilm:pilm /home/pilm
+
+USER pilm
+
+# CMD ["tail", "-f", "/dev/null"]
+CMD ["python", "/home/pilm/pilm-ui/manage.py", "runserver", "0.0.0.0:8000"]
