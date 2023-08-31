@@ -1,16 +1,24 @@
 from .mqtt.subscriber import Subscriber
 from .stock import Stock
 from loguru import logger
+from .models.assembly_line import AssemblyLine
+import threading  
 import json
 
 class Factory(Subscriber):
   def __init__(self):
     super().__init__()
-    topic = self.config.get('factory', 'topic')
+    self.topic = self.config.get('factory', 'topic')
+    self.refuel_topic = 'refuel/{factory}'.format(factory=self.name)
     self.client.on_message = self.on_message
     self.notification_topic = self.config.get('factory', 'notification_topic')
-    self.stock = Stock(range(100))
-    self.subscribe(topic)
+    self.assembly_lines = [
+      AssemblyLine(self, i) for i in range(
+        int(self.config.get('factory', 'assembly_lines'))
+      )
+    ]
+    self.stock = Stock(self, range(100), 'order/refuel')
+    self.subscribe(self.topic, self.refuel_topic)
 
   def on_message(self, client, userdata, msg):
     payload = json.loads(msg.payload.decode())
@@ -20,6 +28,19 @@ class Factory(Subscriber):
 
     logger.debug(log.format(name=self.name, payload=payload, topic=msg.topic))
 
+    if msg.topic == self.topic:
+      self.parse_topic(payload)
+    elif msg.topic == self.refuel_topic:
+      self.parse_refuel_topic(payload)
+
+  def parse_refuel_topic(self, payload):
+    for key, value in payload.items():
+      item = self.stock.see_stock(int(key))
+      item['quantity'] += value['quantity']
+      self.stock.add(item)
+    self.notify()
+
+  def parse_topic(self, payload):
     product_version, parts = payload.values()
 
     product_requirements = self.get_product_requirements(product_version, parts)
@@ -31,14 +52,21 @@ class Factory(Subscriber):
       logger.debug(log.format(name=self.name, product_version=product_version))
       return
 
-    self.produce_product(product_version, product_requirements)
-
-  def produce_product(self, product_version, product_requirements):
-    self.stock.consume_stock(product_requirements)
-    self.send_to_deposit(product_version, product_requirements)
+    for assembly_line in self.assembly_lines:
+      if assembly_line.state == 'idle':
+        thread = threading.Thread(
+          target=assembly_line.produce_product,
+          args=(
+            product_version,
+            product_requirements,
+          )
+        )
+        thread.start()
     self.notify()
 
-  def send_to_deposit(self, product_version, product_requirements):
+  def send_to_deposit(
+      self, assembly_line: AssemblyLine, product_version, product_requirements
+  ):
     topic = self.config.get('deposit', 'topic')
     self.client.publish(
       topic,
@@ -50,12 +78,19 @@ class Factory(Subscriber):
       )
     )
     log = (
-      '{name} Produced the product {product_version}'
+      '{name} Produced the product {product_version} using assembly line {assembly_line_id}'
     )
-    logger.debug(log.format(name=self.name, product_version=product_version))
+    logger.debug(
+      log.format(
+        name=self.name,
+        product_version=product_version,
+        assembly_line_id=assembly_line.id
+      )
+    )
 
   def notify(self):
-    self.ws_client.publish(self.notification_topic, json.dumps(self.stock.items))
+    data = self.stock.items
+    self.ws_client.publish(self.notification_topic, json.dumps(data))
     log = (
       '{name} notified {topic} topic'
     )

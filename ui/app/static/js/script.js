@@ -28,13 +28,17 @@ client.on('connect', () => {
   // Subscribe
   client.subscribe('ui/deposit', { qos: 0 })
   client.subscribe('ui/factory', { qos: 0 })
+  client.subscribe('ui/warehouse', { qos: 0 })
 })
 client.on('message', (topic, message, packet) => {
   const parsed = JSON.parse(message)
+  console.log(topic)
   if (topic === 'ui/deposit')
     process_deposit(parsed)
   else if (topic === 'ui/factory')
     process_factory(parsed)
+  else if (topic === 'ui/warehouse')
+    process_warehouse(parsed)
 })
 client.on('error', (err) => {
   console.log('Connection error: ', err)
@@ -55,6 +59,26 @@ function process_factory(parsed) {
   const ulRed = document.getElementById("red-factory")
   const ulYellow = document.getElementById("yellow-factory")
   const ulGreen = document.getElementById("green-factory")
+  ulRed.innerHTML = "";
+  ulYellow.innerHTML = "";
+  ulGreen.innerHTML = "";
+  
+  Object.keys(parsed).forEach((key) => {
+    let li = document.createElement('li')
+    li.appendChild(document.createTextNode(key.toString()))
+    if (parsed[key].level == 'red')
+      ulRed.appendChild(li)
+    else if (parsed[key].level == 'yellow')
+    ulYellow.appendChild(li)
+    else if (parsed[key].level == 'green')
+    ulGreen.appendChild(li)
+  })
+}
+
+function process_warehouse(parsed) {
+  const ulRed = document.getElementById("red-warehouse")
+  const ulYellow = document.getElementById("yellow-warehouse")
+  const ulGreen = document.getElementById("green-warehouse")
   ulRed.innerHTML = "";
   ulYellow.innerHTML = "";
   ulGreen.innerHTML = "";

@@ -46,10 +46,41 @@ services:
       - PILM_CONF=/etc/pilm/pilm.conf
     networks:
       - pilm-network
+  pilm-warehouse:
+    depends_on:
+      - mqtt-broker
+    container_name: pilm-warehouse
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.pilm
+    command: python /home/pilm/start-warehouse.py
+    restart: unless-stopped
+    volumes:
+      - ./docker/configs/warehouse.conf:/etc/pilm/pilm.conf
+    environment:
+      - PILM_CONF=/etc/pilm/pilm.conf
+    networks:
+      - pilm-network
+  pilm-provider:
+    depends_on:
+      - mqtt-broker
+    container_name: pilm-provider
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile.pilm
+    command: python /home/pilm/start-provider.py
+    restart: unless-stopped
+    volumes:
+      - ./docker/configs/provider.conf:/etc/pilm/pilm.conf
+    environment:
+      - PILM_CONF=/etc/pilm/pilm.conf
+    networks:
+      - pilm-network
   pilm-ui:
     depends_on:
       - pilm-factory
       - pilm-deposit
+      - pilm-warehouse
     container_name: pilm-ui
     build:
       context: ./

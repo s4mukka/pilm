@@ -10,7 +10,7 @@ class Deposit(Subscriber):
     topic = self.config.get('deposit', 'topic')
     self.notification_topic = self.config.get('deposit', 'notification_topic')
     self.client.on_message = self.on_message
-    self.stock = Stock([])
+    self.stock = Stock(self, [])
     self.subscribe(topic)
     self.notify()
 

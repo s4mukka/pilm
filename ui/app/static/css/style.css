@@ -83,6 +83,13 @@ main > div {
   justify-content: center;
 }
 
+.row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .factory {
   background-color: #f1f1f1;
 
@@ -92,6 +99,7 @@ main > div {
 
   display: flex;
   flex-direction: column;
+  flex: 1;
 
   overflow: hidden;
 }
